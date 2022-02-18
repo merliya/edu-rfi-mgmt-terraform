@@ -1,0 +1,81 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+        {
+			"Action": [
+				"iam:PassRole"
+			],
+			"Resource": "*",
+			"Effect": "Allow",
+			"Condition": {
+				"StringEquals": {
+					"iam:PassedToService": [
+						"cloudformation.amazonaws.com",
+						"elasticbeanstalk.amazonaws.com",
+						"ec2.amazonaws.com"
+					]
+				}
+			}
+		},
+		{
+			"Sid": "ReadBasics",
+			"Effect": "Allow",
+			"Action": [
+				"s3:List*",
+				"s3:GetBucketAcl",
+				"s3:GetBucketLocation",
+				"secretsmanager:GetSecretValue"
+			],
+			"Resource": "*"
+		},
+		{
+			"Sid": "S3Allow",
+			"Effect": "Allow",
+			"Action": "s3:*",
+			"Resource": [
+				"arn:aws:s3:::codepipeline-us-east-1-196264113260",
+				"arn:aws:s3:::codepipeline-us-east-1-196264113260/*"
+			]
+		},
+		{
+			"Sid": "Allow",
+			"Effect": "Allow",
+			"Action": [
+				"codeartifact:*",
+				"codebuild:*",
+				"codepipeline:*",
+				"codedeploy:*",
+				"codestar-connections:UseConnection",
+				"logs:CreateLogGroup",
+				"logs:CreateLogStream",
+				"logs:PutLogEvents"
+			],
+			"Resource": [
+				"arn:aws:codeartifact:us-east-1:050853773894:repository/uop-domain/*",
+				"arn:aws:codeartifact:us-east-1:050853773894:package/uop-domain/*",
+				"arn:aws:codeartifact:us-east-1:050853773894:domain/uop-domain",
+				"arn:aws:codestar-connections:us-east-1:050853773894:connection/*",
+				"arn:aws:codebuild:us-east-1:050853773894:project/common-aem*",
+				"arn:aws:codebuild:us-east-1:050853773894:report-group/common-aem*",
+				"arn:aws:logs:us-east-1:050853773894:log-group:/aws/codebuild/common-aem*",
+				"arn:aws:ecr:us-east-1:050853773894:repository/common-aem*"
+			]
+		},
+		{
+			"Effect": "Allow",
+			"Action": "sts:GetServiceBearerToken",
+			"Resource": "*",
+			"Condition": {
+				"StringEquals": {
+					"sts:AWSServiceName": "codeartifact.amazonaws.com"
+				}
+			}
+		},
+ 		{
+			"Sid": "PreventBucketDelete",
+			"Effect": "Deny",
+			"Action": "s3:DeleteBucket",
+			"Resource": "*"
+		}
+	]
+}
